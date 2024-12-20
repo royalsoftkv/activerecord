@@ -125,7 +125,7 @@ class Column
         // If adding 0 to a string causes a float conversion,
         // we have a number over PHP_INT_MAX
         // @phpstan-ignore-next-line
-        elseif (is_string($value) && is_float($value + 0)) {
+        elseif (is_string($value) && self::isStringFloat($value)) {
             return (string) $value;
         }
 
@@ -139,6 +139,15 @@ class Column
 
         return (int) $value;
     }
+
+    static function isStringFloat($value) {
+        try {
+            return is_float($value + 0);
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
 
     /**
      * Casts a value to the column's type.
