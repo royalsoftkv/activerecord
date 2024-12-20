@@ -1741,12 +1741,12 @@ class Model
      *
      * @return array<static> An array of models
      */
-    public static function find_by_sql(string $sql, array $values = []): array
+    public static function find_by_sql(string $sql, array $values = [], $readonly = true): array
     {
         /**
          * @var array<static> $items
          */
-        $items = iterator_to_array(static::table()->find_by_sql($sql, $values, true));
+        $items = iterator_to_array(static::table()->find_by_sql($sql, $values, $readonly));
 
         return $items;
     }
