@@ -612,11 +612,30 @@ class Model
             // has the ability to flag this model as dirty if a field in the Date object changes.
             $value->attribute_of($this, $name);
         }
-
+        $flag_as_dirty = $this->check_dirty($this->attributes[$name], $value);
         $this->attributes[$name] = $value;
-        $this->flag_dirty($name);
+        if ($flag_as_dirty) {
+            $this->flag_dirty($name);
+        }
 
         return $value;
+    }
+
+
+    function check_dirty($a, $b) {
+        if ($a instanceof DateTime) {
+            $a = $a->getTimestamp();
+        }
+        if ($b instanceof DateTime) {
+            $b = $b->getTimestamp();
+        }
+        if(isset($a) && isset($b)) {
+            return ($a===$b) ? false : true;
+        } else if(!isset($a) && !isset($b)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
