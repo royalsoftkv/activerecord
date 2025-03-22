@@ -130,6 +130,10 @@ abstract class Connection
             $connection->set_encoding($info['charset']);
         }
 
+        if(is_callable($config->onConnect)) {
+            call_user_func($config->onConnect, $connection);
+        }
+
         return $connection;
     }
 
@@ -356,6 +360,11 @@ abstract class Connection
 
         $this->last_query = $sql;
 
+        $config = Config::instance();
+        if(is_callable($config->beforeQuery)) {
+            call_user_func($config->beforeQuery, $this);
+        }
+
         try {
             if (!($sth = $this->connection->prepare($sql))) {
                 throw new DatabaseException();
@@ -373,7 +382,14 @@ abstract class Connection
                 throw new DatabaseException($msg);
             }
         } catch (\PDOException $e) {
+            if(is_callable($config->onError)) {
+                call_user_func($config->onError, $e, $this, $sql, $values);
+            }
             throw new DatabaseException($msg . ': ' . $e->getMessage());
+        }
+
+        if(is_callable($config->afterQuery)) {
+            call_user_func($config->afterQuery, $this, $sql, $values);
         }
 
         return $sth;

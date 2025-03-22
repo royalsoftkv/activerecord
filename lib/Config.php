@@ -258,4 +258,33 @@ class Config extends Singleton
     {
         Cache::initialize($url, $options);
     }
+
+    /**
+     * Function to execute after conenction
+     *
+     * @var Closure
+     */
+    public $onConnect;
+
+    /**
+     * Function to execute before each query
+     *
+     * @var Closure
+     */
+    public $beforeQuery;
+
+    /**
+     * Function to execute after each query
+     *
+     * @var Closure
+     */
+    public $afterQuery;
+
+    /**
+     * Function to execute if error in query occured
+     *
+     * @var Closure
+     */
+    public $onError;
+
 }
