@@ -612,7 +612,12 @@ class Model
             // has the ability to flag this model as dirty if a field in the Date object changes.
             $value->attribute_of($this, $name);
         }
-        $flag_as_dirty = $this->check_dirty($this->attributes[$name], $value);
+
+        if(array_key_exists($name, $this->attributes)) {
+            $flag_as_dirty = $this->check_dirty(@$this->attributes[$name], $value);
+        } else {
+            $flag_as_dirty = true;
+        }
         $this->attributes[$name] = $value;
         if ($flag_as_dirty) {
             $this->flag_dirty($name);
